@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:scrapify_mobile/module/event_info.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+import '../service/event.dart';
+import '../module/notification.dart';
+import '../module/event_info.dart';
 import '../res/asset.dart';
 import '../res/color.dart';
 import '../res/style.dart';
@@ -12,27 +16,57 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  late List<Map> event = [
-    {
-      'id': 1,
-      'name': 'Event name',
-      'address': 'Address name',
-      'product': ['clothes', 'plastic', 'paper'],
-      'time': '17/03 - 19/03',
-    },
-    {
-      'id': 2,
-      'name': 'Event name',
-      'address': 'Address name',
-      'product': ['clothes', 'plastic', 'paper'],
-      'time': '17/03 - 19/03',
-    },
-  ];
+  List<Map> event = [];
+  Future<List<Map>?> getEvent() async {
+    final response = await EventApi.getEvent();
+    if (response != null) {
+      setState(() {
+        event = response;
+      });
+    } else {
+      event = [];
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getEvent();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        elevation: 0,
+        shape: const Border(
+          bottom: BorderSide(
+            color: Color.fromRGBO(102, 102, 102, 0.08),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Home',
+          style: Font.subtitleLargeBold,
+        ),
+        centerTitle: false,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.solidBell,
+              color: Cl.brandPrimaryBase,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationPage(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
           horizontal: 16,
@@ -84,10 +118,17 @@ class HomePageState extends State<HomePage> {
                       ),
                       child: Row(
                         children: [
-                          Image.asset(
-                            Id.clothes,
+                          // Image.asset(
+                          //   Id.clothes,
+                          //   width: 120,
+                          //   height: 120,
+                          // ),
+
+                          Image.network(
+                            event[index]['recipient_avatar'],
                             width: 120,
                             height: 120,
+                            fit: BoxFit.cover,
                           ),
                           const SizedBox(width: 16),
                           Expanded(
@@ -105,7 +146,15 @@ class HomePageState extends State<HomePage> {
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
-                                  event[index]['time'],
+                                  '${DateFormat('dd/MM').format(
+                                    DateTime.parse(
+                                      event[index]['start_time'],
+                                    ),
+                                  )} - ${DateFormat('dd/MM').format(
+                                    DateTime.parse(
+                                      event[index]['end_time'],
+                                    ),
+                                  )}',
                                   style: Font.linkXSmall.copyWith(
                                     color: Cl.grayscaleSubtleText,
                                   ),
@@ -113,42 +162,17 @@ class HomePageState extends State<HomePage> {
                                 const SizedBox(height: 6),
                                 Wrap(
                                   children: [
-                                    Chip(
-                                      label: Text(
-                                        event[index]['product'][0],
-                                        style: Font.text2xSmall,
-                                      ),
-                                      backgroundColor: Cl.brandPrimaryBg,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
+                                    Text(
+                                      event[index]['categories'][0]['name'],
+                                      style: Font.textSmall,
                                     ),
-
                                     const VerticalDivider(),
-                                    Chip(
-                                      label: Text(
-                                        event[index]['product'][1],
-                                        style: Font.text2xSmall,
-                                      ),
-                                      backgroundColor: Cl.brandPrimaryBg,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                    ),
-
-                                    const VerticalDivider(),
-                                    Chip(
-                                      label: Text(
-                                        event[index]['product'][2],
-                                        style: Font.text2xSmall,
-                                      ),
-                                      backgroundColor: Cl.brandPrimaryBg,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
+                                    Text(
+                                      event[index]['categories'][1]['name'],
+                                      style: Font.textSmall,
                                     ),
                                   ],
-                                )
+                                ),
                               ],
                             ),
                           ),
