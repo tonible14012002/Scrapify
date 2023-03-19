@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:scrapify_mobile/widget/tag.dart';
 import '../service/event.dart';
 import '../module/notification.dart';
 import '../module/event_info.dart';
@@ -77,7 +78,7 @@ class HomePageState extends State<HomePage> {
           children: [
             const TextField(
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: Icon(Icons.search, color: Cl.brandPrimaryBase,),
                 hintText: 'Search a event',
                 hintStyle: Font.textMedium,
                 contentPadding: EdgeInsets.symmetric(
@@ -91,6 +92,11 @@ class HomePageState extends State<HomePage> {
                   borderSide: BorderSide(
                     width: 1,
                     style: BorderStyle.solid,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Cl.brandPrimaryBase,
                   ),
                 ),
               ),
@@ -123,7 +129,6 @@ class HomePageState extends State<HomePage> {
                           //   width: 120,
                           //   height: 120,
                           // ),
-
                           Image.network(
                             event[index]['recipient_avatar'],
                             width: 120,
@@ -161,17 +166,14 @@ class HomePageState extends State<HomePage> {
                                 ),
                                 const SizedBox(height: 6),
                                 Wrap(
-                                  children: [
-                                    Text(
-                                      event[index]['categories'][0]['name'],
-                                      style: Font.textSmall,
+                                  spacing: 8,
+                                  children: List.generate(
+                                    event[index]['categories'].length,
+                                    (int i) => CustomTag(
+                                      name: event[index]['categories'][i]
+                                          ['name'],
                                     ),
-                                    const VerticalDivider(),
-                                    Text(
-                                      event[index]['categories'][1]['name'],
-                                      style: Font.textSmall,
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ],
                             ),

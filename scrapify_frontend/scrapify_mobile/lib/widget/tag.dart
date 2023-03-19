@@ -20,7 +20,7 @@ class CustomTagState extends State<CustomTag> {
     return Chip(
       label: Text(
         widget.name,
-        style: Font.textMedium,
+        style: Font.textSmall,
       ),
       backgroundColor: Cl.brandPrimaryBg,
       shape: RoundedRectangleBorder(
