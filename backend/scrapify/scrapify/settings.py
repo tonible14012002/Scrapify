@@ -25,18 +25,33 @@ SECRET_KEY = 'django-insecure-xjmu79+6m)&lf-7v6+(b(@m5#(!=@1^xf2f94f4jr!o_scu1a0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 AUTH_USER_MODEL = 'account.MyUser'
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media/'
+
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 INSTALLED_APPS = [
     # apps
     'account', 
-
+    'matching',
     # 3rd part
     'rest_framework',
-    
+    'corsheaders',
+    'django_filters',
+
     # Built-in
     'django.contrib.admin',
     'django.contrib.auth',
@@ -49,6 +64,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    
+    'corsheaders.middleware.CorsMiddleware',
+    
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

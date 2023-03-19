@@ -17,16 +17,28 @@ class DonorManager(models.Manager):
 class RecipientProfile(models.Model):
     founded_date = models.DateField(null=False)
     organization_name= models.CharField(max_length=100, null=False)
-    website_url = models.CharField(max_length=200, null=True)
-    avatar = models.ImageField(upload_to='user/{instance.username}')
-    founder = models.CharField(max_length=100, null=True)
+    website_url = models.CharField(max_length=200, null=True, blank=True)
+    avatar = models.ImageField(upload_to='user/{instance.username}', null=True)
+    founder = models.CharField(max_length=100, null=True, blank=True)
     desciption = models.TextField(null=False)
+
+    def get_username(self):
+        return self.user.username
+
+    def __str__(self):
+        return self.user.username + '_profile'
 
 class DonorProfile(models.Model):
     points = models.IntegerField(default=0)
 
+    def get_username(self):
+        return self.user.username
+
+    def __str__(self):
+        return self.user.username + '_profile'
+
 class MyUser(AbstractUser):
-    PHONE_REGEX_VALIDATOR = RegexValidator(regex='(84|0[3|5|7|8|9])+([0-9]{8})\b',
+    PHONE_REGEX_VALIDATOR = RegexValidator(regex='(84|0[3|5|7|8|9])+([0-9]{8})',
                                            message='Incorrect phone number formats')
     phone = models.CharField(validators=[PHONE_REGEX_VALIDATOR],
                             null=False, blank=False,
@@ -41,8 +53,13 @@ class MyUser(AbstractUser):
 
     recipient_profile = models.OneToOneField(RecipientProfile,
                                             on_delete=models.CASCADE,
+                                            related_name='user',
                                              null=True)
     donor_profile = models.OneToOneField(DonorProfile,
-                                        on_delete=models.CASCADE,
+                                        on_delete=models.Case,
+                                        related_name='user',
                                          null=True)
     REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.username
