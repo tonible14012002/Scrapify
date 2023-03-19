@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../res/asset.dart';
 import '../res/color.dart';
 import '../res/style.dart';
 import '../widget/button.dart';
@@ -63,8 +62,10 @@ class EventInfoState extends State<EventInfo> {
                   SizedBox(
                     height: 300,
                     width: double.infinity,
-                    child: Image.asset(
-                      Id.clothes,
+                    child:  Image.network(
+                      widget.event['banner'],
+                      width: 120,
+                      height: 120,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -78,11 +79,12 @@ class EventInfoState extends State<EventInfo> {
                       children: [
                         Wrap(
                           spacing: 8,
-                          children: [
-                            CustomTag(name: widget.event['categories'][0]['name']),
-                            const VerticalDivider(),
-                            CustomTag(name: widget.event['categories'][1]['name']),
-                          ],
+                          children: List.generate(
+                            widget.event['categories'].length,
+                                (int i) => CustomTag(
+                              name: widget.event['categories'][i]['name'],
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 24),
                         Text(

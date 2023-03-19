@@ -1,10 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
+import '../service/product.dart';
 import '../widget/button.dart';
-
 import '../res/color.dart';
 import '../res/style.dart';
 
@@ -24,13 +24,14 @@ class AddProductState extends State<AddProduct> {
   final countController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  String? categorySelectedValue;
+  List<int>? category = [];
+  List<String>? categorySelectedValue = [];
   List<String> categoryValues = [
-    'clothes',
-    'paper',
-    'mental scrap',
-    'plastic',
-    'other',
+    'Cloth',
+    'Plastic',
+    'Mental Scrap',
+    'Paper',
+    'Other',
   ];
 
   @override
@@ -43,7 +44,8 @@ class AddProductState extends State<AddProduct> {
   }
 
   Future<void> openGallery() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
         imageFile = File(pickedFile.path);
@@ -68,6 +70,32 @@ class AddProductState extends State<AddProduct> {
     final directory = await getApplicationDocumentsDirectory();
     final imagePath = '${directory.path}/image.jpg';
     await image.copy(imagePath);
+  }
+
+  Future<void> createProduct() async {
+    final isSuccess = await ProductApi.createProduct(body);
+
+    print(isSuccess);
+    if (isSuccess) {
+     setState(() {
+       nameController.text = '';
+       weightController.text = '';
+       countController.text = '';
+       descriptionController.text = '';
+     });
+    } else {}
+  }
+
+  Map get body {
+    return {
+      'name': nameController.text,
+      'weight': weightController.text,
+      'count': countController.text,
+      'description': descriptionController.text,
+      'categories': category,
+      // 'image': base64Encode(imageFile?.readAsBytesSync() as List<int>),
+      'donor_profile': 6,
+    };
   }
 
   @override
@@ -140,34 +168,59 @@ class AddProductState extends State<AddProduct> {
               ),
               const SizedBox(height: 24),
               const Text(
+                "Description",
+                style: Font.subtitleSmallBold,
+              ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: descriptionController,
+              ),
+              const SizedBox(height: 24),
+              const Text(
                 "Category",
                 style: Font.subtitleSmallBold,
               ),
               const SizedBox(height: 8),
-              DropdownButton<String>(
-                elevation: 0,
-                dropdownColor: Colors.white,
-                alignment: AlignmentDirectional.bottomEnd,
-                value: categorySelectedValue,
-                items: categoryValues.map(
-                  (value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Text(value),
+              Wrap(
+                spacing: 8,
+                children: List<Widget>.generate(
+                  categoryValues.length,
+                  (int index) {
+                    final id = index + 1;
+                    return ChoiceChip(
+                      backgroundColor: Cl.brandPrimaryBg,
+                      selectedColor: Cl.brandPrimaryBase,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        side: const BorderSide(
+                          width: 1,
+                          style: BorderStyle.solid,
+                          color: Cl.brandPrimaryBase,
+                        ),
                       ),
+                      label: Text(
+                        '${categoryValues[index]}',
+                        style: Font.textXSmall,
+                      ),
+                      selected: categorySelectedValue!
+                          .contains(categoryValues[index]),
+                      onSelected: (bool selected) {
+                        setState(
+                          () {
+                            if (selected) {
+                              categorySelectedValue!.add(categoryValues[index]);
+                              category?.add(id);
+                            } else {
+                              categorySelectedValue!
+                                  .remove(categoryValues[index]);
+                              category?.remove(id);
+                            }
+                          },
+                        );
+                      },
                     );
                   },
-                ).toList(),
-                onChanged: (value) {
-                  setState(
-                    () {
-                      categorySelectedValue = value;
-                    },
-                  );
-                },
-                isExpanded: true,
+                ),
               ),
               const SizedBox(height: 24),
               const Text(
@@ -180,45 +233,53 @@ class AddProductState extends State<AddProduct> {
                     ? Text('No image selected.')
                     : Image.file(imageFile!),
               ),
-              IconButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Container(
-                        child: Wrap(
-                          children: [
-                            ListTile(
-                              leading: Icon(Icons.camera_alt),
-                              title: Text('Take a photo'),
-                              onTap: () {
-                                Navigator.of(context).pop();
-                                openCamera();
-                              },
-                            ),
-                            ListTile(
-                              leading: Icon(Icons.image),
-                              title: Text('Choose from gallery'),
-                              onTap: () {
-                                Navigator.of(context).pop();
-                                openGallery();
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-                icon: Icon(Icons.add_a_photo, color: Cl.brandPrimaryBase,),
+              Center(
+                child: IconButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          child: Wrap(
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.camera_alt),
+                                title: Text('Take a photo'),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  openCamera();
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.image),
+                                title: Text('Choose from gallery'),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  openGallery();
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.add_a_photo,
+                    color: Cl.brandPrimaryBase,
+                  ),
+                ),
               ),
-
               SizedBox(
                 width: double.infinity,
                 height: 44,
                 child: CustomButton(
                   name: 'Post',
-                  onPressed: () {},
+                  onPressed: () {
+                    if (formKey.currentState?.validate != null) {
+                      createProduct();
+                    }
+                  },
                 ),
               ),
             ],

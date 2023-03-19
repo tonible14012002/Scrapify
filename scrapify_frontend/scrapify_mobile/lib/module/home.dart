@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:scrapify_mobile/widget/tag.dart';
+import '../widget/tag.dart';
 import '../service/event.dart';
 import '../module/notification.dart';
 import '../module/event_info.dart';
-import '../res/asset.dart';
 import '../res/color.dart';
 import '../res/style.dart';
 
@@ -18,15 +17,11 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   List<Map> event = [];
-  Future<List<Map>?> getEvent() async {
+  Future<void> getEvent() async {
     final response = await EventApi.getEvent();
-    if (response != null) {
-      setState(() {
-        event = response;
-      });
-    } else {
-      event = [];
-    }
+    setState(() {
+      event = response;
+    });
   }
 
   @override
@@ -124,13 +119,8 @@ class HomePageState extends State<HomePage> {
                       ),
                       child: Row(
                         children: [
-                          // Image.asset(
-                          //   Id.clothes,
-                          //   width: 120,
-                          //   height: 120,
-                          // ),
                           Image.network(
-                            event[index]['recipient_avatar'],
+                            event[index]['banner'],
                             width: 120,
                             height: 120,
                             fit: BoxFit.cover,
