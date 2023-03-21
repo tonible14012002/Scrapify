@@ -85,7 +85,6 @@ py==1.11.0
 pycparser==2.21
 pygame==2.1.2
 Pygments==2.13.0
-PyJWT==2.6.0
 pyOpenSSL==22.0.0
 pyparsing==3.0.9
 pypiwin32==223

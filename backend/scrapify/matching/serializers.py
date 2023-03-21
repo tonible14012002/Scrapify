@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from matching.models import Event, Item, Category, Matching
+from matching.models import Event, Item, Category, Matching, Care
 from account.serializers import DonorProfileSerializer
 
 
@@ -14,8 +14,12 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ['id', 'name', 'weight', 'count', 'categories', 
+        fields = ['id', 'name', 'weight', 'count', 'categories',
                   'description', 'created_at', 'updated_at', 'donor_profile', 'donor_username']
+
+    def validate(self, attrs):
+        print(attrs)
+        return super().validate(attrs)
     
     def get_donor_username(self, obj):
         return obj.donor_profile.get_username()
@@ -95,3 +99,24 @@ class MatchingDetailSerializer(serializers.ModelSerializer):
         ).data
 
         return data
+
+    
+class CareSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Care
+        fields = ['recipient', 'item', 'created_at', 'updated_at']
+        extra_kwargs = {
+            'created_at': {'read_only': True}, 
+            'updated_at': {'read_only': False}
+        }
+    
+    def create(self, validated_data):
+        care = Care.objects.filter(
+            recipient__id=validated_data['recipient'],
+            item__id=validated_data['item']
+        )
+
+        if care.exists():
+            return care.first()
+        else:
+            super().create(validated_data)

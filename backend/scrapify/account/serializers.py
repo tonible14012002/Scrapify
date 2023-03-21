@@ -21,7 +21,7 @@ class MyUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MyUser
-        fields = ['id', 'username', 'phone', 'email', 'address', 
+        fields = ['id', 'username', 'phone', 'email', 'address', 'is_staff',
                   'is_recipient', 'recipient_profile', 'donor_profile']
     
     def get_recipient_profile(self, user):

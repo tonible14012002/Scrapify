@@ -24,6 +24,10 @@ class Item(models.Model):
 def get_event_directory(instance, filename):
     return f'{instance.name}'
 
+class ActiveEventManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(closed=False)
+
 class Event(models.Model):
     name = models.CharField(max_length=100)
     start_time = models.DateTimeField()
@@ -40,6 +44,9 @@ class Event(models.Model):
     categories = models.ManyToManyField(Category, related_name='events')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    is_active = ActiveEventManager()
+    objects = models.Manager()
 
     def get_organization_name(self):
         return self.recipient_profile.organization_name
@@ -74,3 +81,13 @@ class Matching(models.Model):
     class Meta:
         ordering = ['-updated_at', '-created_at']
         
+class Care(models.Model):
+    recipient = models.ForeignKey(RecipientProfile, 
+                                  on_delete=models.CASCADE,
+                                  related_name='cares')
+    items = models.ForeignKey(Item, 
+                              on_delete=models.CASCADE, 
+                              related_name='cares')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
