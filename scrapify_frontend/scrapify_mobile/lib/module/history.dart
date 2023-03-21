@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import '../module/confirmed.dart';
 import '../module/finished.dart';
 import '../module/matched.dart';
@@ -7,9 +8,14 @@ import '../module/pending.dart';
 import '../module/notification.dart';
 import '../res/color.dart';
 import '../res/style.dart';
+import '../service/data_provider.dart';
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({Key? key}) : super(key: key);
+
+  const HistoryPage({
+    Key? key,
+
+  }) : super(key: key);
 
   @override
   State<HistoryPage> createState() => HistoryPageState();
@@ -52,6 +58,7 @@ class HistoryPageState extends State<HistoryPage> {
   ];
   @override
   Widget build(BuildContext context) {
+
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -63,7 +70,7 @@ class HistoryPageState extends State<HistoryPage> {
             ),
           ),
           backgroundColor: Colors.white,
-          title: const Text(
+          title:  Text(
             'History',
             style: Font.subtitleLargeBold,
           ),

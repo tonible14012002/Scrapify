@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../module/personal.dart';
 import '../module/history.dart';
 import '../module/home.dart';
 import '../module/point.dart';
 import '../res/color.dart';
 import '../res/style.dart';
+import '../service/data_provider.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({Key? key}) : super(key: key);
@@ -14,6 +16,7 @@ class Navbar extends StatefulWidget {
 }
 
 class NavbarState extends State<Navbar> {
+
   int selectedIndex = 0;
   List<BottomNavigationBarItem> bottomNavBarItems = const [
     BottomNavigationBarItem(
@@ -57,6 +60,11 @@ class NavbarState extends State<Navbar> {
     PersonalPage(),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   void onNavBarItemTapped(int index) {
     setState(
       () {
@@ -67,6 +75,7 @@ class NavbarState extends State<Navbar> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: pages[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:scrapify_mobile/navigation/navbar.dart';
+import '../navigation/navbar.dart';
+import '../service/data_provider.dart';
 
 class StackNavigator extends StatefulWidget {
-  const StackNavigator({Key? key}) : super(key: key);
+  const StackNavigator({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<StackNavigator> createState() => StackNavigatorState();
@@ -15,7 +18,7 @@ class StackNavigatorState extends State<StackNavigator> {
       debugShowCheckedModeBanner: false,
       initialRoute: 'signed_in',
       routes: <String, Widget Function(BuildContext)>{
-        'signed_in': (context) => const Navbar()
+        'signed_in': (context) => const DataProvider(),
       },
     );
   }

@@ -11,7 +11,6 @@ class ProductApi {
       body: jsonEncode(body),
       headers: {'Content-Type': 'application/json'},
     );
-    print(response.body);
     return response.statusCode >= 200 && response.statusCode <= 300;
   }
 }
