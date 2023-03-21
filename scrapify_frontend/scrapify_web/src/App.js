@@ -1,12 +1,18 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import DefaultLayout from "./layouts/DefaultLayout";
 import NoHeaderLayout from "./layouts/NoHeaderLayout/index.js";
-import { privateRoutes } from "./routes";
+import { privateRoutes } from "./router/routes";
+import JWTManager from './auth/jwt'
+import AuthGuard from "./auth/AuthGuard";
 
 function App() {
+
+  console.log('========================')
+  console.log('access: ', !!JWTManager.getToken())
+  console.log('refresh', !!JWTManager.getRefreshToken())
   
   return (
-    <BrowserRouter>
+    <AuthGuard>
       <Routes>
         {privateRoutes.map((route, index) => {
           const Page = route.component;
@@ -34,7 +40,7 @@ function App() {
           }
         />
       </Routes>
-    </BrowserRouter>
+    </AuthGuard>
   );
 }
 

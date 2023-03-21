@@ -6,6 +6,7 @@ const EButton = ({
     children,
     disabled,
     to,
+    className,
     ...passProps
 }) => {
 
@@ -35,6 +36,7 @@ const EButton = ({
 
     return (
         <Com
+            className={` ${className} ${disabled && 'opacity-[80%]'}`}
             {...props}
         >
         {children}

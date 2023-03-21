@@ -10,29 +10,22 @@ const PageRoute = () => {
             <EButton
                 to={'/'}
             >
-                <div className={`px-8 py-3 ${pageName === pages.Dashboard? "text-white bg-blue-400": "hover:text-blue-500"} transition-all `}>
-                    Dashboard
+                <div className={`px-8 py-3 ${pageName === pages.Home? "text-white bg-teal-600": "hover:text-teal-600"} transition-all `}>
+                    Home
                 </div>
             </EButton>
             <EButton
-                to={'/employee'}
+                to={'/events'}
             >
-                <div className={`px-8 py-3 ${pageName === pages.Employee ? "hover:bg-blue-500 text-white bg-blue-400": "hover:text-blue-500"} transition-all `}>
-                    Employee 
+                <div className={`px-8 py-3 ${pageName === pages.Event ? "hover:bg-teal-600 text-white bg-teal-600": "hover:text-teal-600"} transition-all `}>
+                    Event
                 </div>
             </EButton>
             <EButton
-                to={'/vehicle'}
+                to={'/donor-requests'}
             >
-                <div className={`px-8 py-3 ${pageName === pages.Vehicle ? "hover:bg-blue-500 text-white bg-blue-400": "hover:text-blue-500"} transition-all `}>
-                    Vehicle
-                </div>
-            </EButton>
-            <EButton
-                to={'/route-map'}
-            >
-                <div className={`px-8 py-3 ${pageName === pages.RouteMap ? "text-white bg-blue-400": "hover:text-blue-500"} transition-all `}>
-                    Route Map 
+                <div className={`px-8 py-3 ${pageName === pages.DonorRequest ? "hover:bg-teal-600 text-white bg-teal-600": "hover:text-teal-600"} transition-all `}>
+                    Donor Request
                 </div>
             </EButton>
         </div>

@@ -1,19 +1,17 @@
 import { useEffect, useState } from "react";
 
 const routesMap = {
-    Dashboard: '/',
-    Employee: '/employee',
-    RouteMap: '/route-map',
-    Vehicle: '/vehicle'
+    Home: '/',
+    Event: '/events',
+    DonorRequest: '/donor-requests',
 }
 
 const usePageName = () => {
     const [ pageName, setPageName ] = useState("");
     const pages = {
-        Dashboard: 'Dashboard',
-        Employee : 'Employee',
-        RouteMap : 'RouteMap',
-        Vehicle: 'Vehicle'
+        Home: 'Home',
+        Event : 'Event',
+        DonorRequest : 'DonorRequest',
     }
     const handleGetPageName = () => {
         let location = window.location.pathname;
