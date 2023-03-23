@@ -38,20 +38,23 @@ class User extends ChangeNotifier {
   }
 }
 
-class Product extends ChangeNotifier {
-  Map _product = {};
+class ProductProvider extends ChangeNotifier {
+  List<Map> _items = [];
+  List<Map> get items => _items;
 
-  Map get product => _product;
-
-  Future<void> fetchProduct(int donorProfile) async {
-    final url = Uri.parse('192.168.1.8:8000/matching/items/?donor_profile=${donorProfile}');
+  Future<List<Map>> fetchItems(int donorProfile) async {
+    donorProfile = 1;
+    final url = Uri.parse('http://172.16.2.206:8000/matching/items/?donor_profile=1');
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      _product = json.decode(response.body);
+      final json = jsonDecode(response.body) as List;
+      _items = json.cast<Map>();
       notifyListeners();
+      return _items;
     } else {
       throw Exception('Failed to load data');
     }
+
   }
 }
 
@@ -79,7 +82,7 @@ class DataProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => User()),
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
       ],
       child: Navbar(),
     );
