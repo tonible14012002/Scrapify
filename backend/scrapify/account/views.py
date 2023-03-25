@@ -18,6 +18,7 @@ from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 import jwt
 
 MyUser = get_user_model()
@@ -26,15 +27,17 @@ MyUser = get_user_model()
 
 class MyUserViewSet(ViewSet,
                     ListAPIView,
+                    RetrieveAPIView,
                     CreateAPIView):
     queryset = MyUser.objects.all()
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['is_recipient']
 
     def get_serializer_class(self):
         if self.action == 'create':
             return MyUserRegisterSerializer
         return MyUserSerializer
-
 
 @api_view(['POST'])
 def get_user_from_refresh(request):
