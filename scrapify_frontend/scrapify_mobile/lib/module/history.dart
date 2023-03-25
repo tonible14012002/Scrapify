@@ -22,13 +22,14 @@ class HistoryPage extends StatefulWidget {
 }
 
 class HistoryPageState extends State<HistoryPage> {
+
   List<Map> products = [
     {
       'id': 1,
       'name': 'Old clothes',
       'weight': '2kg',
       'count': 'x2',
-      'recepient': '3 matched',
+      'recipient': '3 matched',
       'status': 'pending',
     },
     {
@@ -36,7 +37,7 @@ class HistoryPageState extends State<HistoryPage> {
       'name': 'Old clothes',
       'weight': '2kg',
       'count': 'x2',
-      'recepient': '3 matched',
+      'recipient': '3 matched',
       'status': 'matched',
     },
     {
@@ -44,7 +45,7 @@ class HistoryPageState extends State<HistoryPage> {
       'name': 'Old clothes',
       'weight': '2kg',
       'count': 'x2',
-      'recepient': '3 matched',
+      'recipient': '3 matched',
       'status': 'confirmed',
     },
     {
@@ -52,7 +53,7 @@ class HistoryPageState extends State<HistoryPage> {
       'name': 'Old clothes',
       'weight': '2kg',
       'count': 'x2',
-      'recepient': '3 matched',
+      'recipient': '3 matched',
       'status': 'finished',
     },
   ];
@@ -70,7 +71,7 @@ class HistoryPageState extends State<HistoryPage> {
             ),
           ),
           backgroundColor: Colors.white,
-          title:  Text(
+          title: const Text(
             'History',
             style: Font.subtitleLargeBold,
           ),
@@ -122,7 +123,7 @@ class HistoryPageState extends State<HistoryPage> {
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             PendingPage(),
             MatchedPage(),

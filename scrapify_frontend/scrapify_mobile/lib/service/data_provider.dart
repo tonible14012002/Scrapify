@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 
 import '../navigation/navbar.dart';
 
+const ipConfig = '192.168.1.14:8000';
+
 // class User extends ChangeNotifier {
 //   Map _user = {};
 //
@@ -38,34 +40,37 @@ class User extends ChangeNotifier {
   }
 }
 
-class Product extends ChangeNotifier {
-  Map _product = {};
+class ProductProvider extends ChangeNotifier {
+  List<Map> _items = [];
+  List<Map> get items => _items;
 
-  Map get product => _product;
-
-  Future<void> fetchProduct(int donorProfile) async {
-    final url = Uri.parse('192.168.1.8:8000/matching/items/?donor_profile=${donorProfile}');
+  Future<List<Map>> fetchItems(int donorProfile) async {
+    final url = Uri.parse('http://${ipConfig}/matching/items/?donor_profile=1');
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      _product = json.decode(response.body);
+      final json = jsonDecode(response.body) as List;
+      _items = json.cast<Map>();
       notifyListeners();
+      return _items;
     } else {
       throw Exception('Failed to load data');
     }
   }
 }
 
-class Matched extends ChangeNotifier {
-  Map _matched = {};
+class MatchedProvider extends ChangeNotifier {
+  List<Map> _matched = [];
+  List<Map> get matched => _matched;
 
-  Map get matched => _matched;
-
-  Future<void> fetchMatched(int donorProfile) async {
-    final url = Uri.parse('192.168.1.8:8000/matching/matching/?item__donor_profile=${donorProfile}');
+  Future<List<Map>> fetchMatched(int donorProfile) async {
+    final url = Uri.parse(
+        'http://${ipConfig}/matching/matching/?item__donor_profile=1');
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      _matched = json.decode(response.body);
+      final json = jsonDecode(response.body) as List;
+      _matched = json.cast<Map>();
       notifyListeners();
+      return _matched;
     } else {
       throw Exception('Failed to load data');
     }
@@ -79,11 +84,10 @@ class DataProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => User()),
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
+        ChangeNotifierProvider(create: (_) => MatchedProvider()),
       ],
       child: Navbar(),
     );
   }
 }
-
-

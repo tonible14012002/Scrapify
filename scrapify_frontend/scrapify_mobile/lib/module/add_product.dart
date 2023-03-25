@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
+import '../service/event.dart';
 import '../service/product.dart';
 import '../widget/button.dart';
 import '../res/color.dart';
@@ -74,8 +75,6 @@ class AddProductState extends State<AddProduct> {
 
   Future<void> createProduct() async {
     final isSuccess = await ProductApi.createProduct(body);
-
-    print(isSuccess);
     if (isSuccess) {
      setState(() {
        nameController.text = '';
@@ -93,8 +92,8 @@ class AddProductState extends State<AddProduct> {
       'count': countController.text,
       'description': descriptionController.text,
       'categories': category,
-      // 'image': base64Encode(imageFile?.readAsBytesSync() as List<int>),
-      'donor_profile': 6,
+      // 'image': imageFile,
+      'donor_profile': 1,
     };
   }
 

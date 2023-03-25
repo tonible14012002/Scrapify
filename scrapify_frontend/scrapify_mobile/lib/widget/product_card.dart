@@ -71,7 +71,7 @@ class ProductCardState extends State<ProductCard> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Recepient',
+                              'recipient',
                               style: Font.textMedium,
                             ),
                             Text(
