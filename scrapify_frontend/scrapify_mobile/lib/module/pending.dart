@@ -5,6 +5,7 @@ import '../res/asset.dart';
 import '../res/color.dart';
 import '../res/style.dart';
 import '../service/data_provider.dart';
+import '../service/product.dart';
 
 class PendingPage extends StatefulWidget {
   const PendingPage({
@@ -18,143 +19,70 @@ class PendingPage extends StatefulWidget {
 class PendingPageState extends State<PendingPage> {
   List<Map> items = [];
   Future<void> getItems() async {
-    final response = await Provider.of<ProductProvider>(context, listen: false).fetchItems(1);
+    final response = await Provider.of<ProductProvider>(context, listen: false)
+        .fetchItems(1);
     setState(() {
       items = response;
     });
   }
 
+  Future<void> deleteItem(int id) async {
+    print('chua xoa');
+    final isSuccess = await ProductApi.deleteProduct(id);
+    print('xoa');
+    if (isSuccess) {
+      setState(() {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Success to delete.'),
+          ),
+        );
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to delete.' ),
+        ),
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    print(items);
     getItems();
-    print(items);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // body: Column(
-      //   children: [
-      //     items.isEmpty ? CircularProgressIndicator() :
-      //     Card(
-      //       margin: EdgeInsets.all(16),
-      //       child: Padding(
-      //         padding: EdgeInsets.all(12),
-      //         child: Column(
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           children: [
-      //             Row(
-      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //               children: [
-      //                 Text(
-      //                   'Old clothes',
-      //                   style: Font.subtitleLargeBold,
-      //                 ),
-      //                 Text('pending'),
-      //               ],
-      //             ),
-      //             Row(
-      //               children: [
-      //                 Image.asset(
-      //                   Id.clothes,
-      //                   width: 120,
-      //                   height: 120,
-      //                 ),
-      //                 Expanded(
-      //                   child: Column(
-      //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //                     children: [
-      //                       Row(
-      //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //                         children: [
-      //                           Text(
-      //                             'Weight',
-      //                             style: Font.textMedium,
-      //                           ),
-      //                           Text(
-      //                             '2kg',
-      //                             style: Font.textMedium,
-      //                           ),
-      //                         ],
-      //                       ),
-      //                       Row(
-      //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //                         children: [
-      //                           Text(
-      //                             'Count',
-      //                             style: Font.textMedium,
-      //                           ),
-      //                           Text(
-      //                             'x2',
-      //                             style: Font.textMedium,
-      //                           ),
-      //                         ],
-      //                       ),
-      //                       Row(
-      //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //                         children: [
-      //                           Text(
-      //                             'Recipient',
-      //                             style: Font.textMedium,
-      //                           ),
-      //                           Text(
-      //                             '3 matched',
-      //                             style: Font.textMedium,
-      //                           ),
-      //                         ],
-      //                       ),
-      //                       Row(
-      //                         mainAxisAlignment: MainAxisAlignment.end,
-      //                         children: [
-      //                           IconButton(
-      //                             onPressed: () {},
-      //                             icon: Icon(
-      //                               Icons.delete,
-      //                               color: Colors.red,
-      //                             ),
-      //                           ),
-      //                         ],
-      //                       )
-      //                     ],
-      //                   ),
-      //                 ),
-      //               ],
-      //             )
-      //           ],
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
             Consumer<ProductProvider>(
-              builder: (context, product, child) => product.items.isEmpty
-                  ? CircularProgressIndicator()
+              builder: (context, provider, child) => provider.items.isEmpty
+                  ? const CircularProgressIndicator()
                   : ListView.builder(
                       shrinkWrap: true,
-                      itemCount: product.items.length,
+                      itemCount: provider.items.length,
                       itemBuilder: (context, index) {
-                        final item = product.items[index];
+                        final item = provider.items[index];
                         return Card(
-                          margin: EdgeInsets.all(16),
+                          margin: const EdgeInsets.all(16),
                           child: Padding(
-                            padding: EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(12),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       item['name'],
                                       style: Font.subtitleLargeBold,
                                     ),
-                                    Text('pending'),
                                   ],
                                 ),
                                 Row(
@@ -164,14 +92,17 @@ class PendingPageState extends State<PendingPage> {
                                       width: 120,
                                       height: 120,
                                     ),
+                                    const SizedBox(width: 16),
                                     Expanded(
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
+                                              const Text(
                                                 'Weight',
                                                 style: Font.textMedium,
                                               ),
@@ -182,9 +113,10 @@ class PendingPageState extends State<PendingPage> {
                                             ],
                                           ),
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
+                                              const Text(
                                                 'Count',
                                                 style: Font.textMedium,
                                               ),
@@ -195,24 +127,28 @@ class PendingPageState extends State<PendingPage> {
                                             ],
                                           ),
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
+                                              const Text(
                                                 'Recipient',
                                                 style: Font.textMedium,
                                               ),
                                               Text(
-                                                '3 matched',
+                                                item['id'].toString(),
                                                 style: Font.textMedium,
                                               ),
                                             ],
                                           ),
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
                                             children: [
                                               IconButton(
-                                                onPressed: () {},
-                                                icon: Icon(
+                                                onPressed: () {
+                                                  deleteItem(item['id']);
+                                                },
+                                                icon: const Icon(
                                                   Icons.delete,
                                                   color: Colors.red,
                                                 ),
@@ -234,7 +170,6 @@ class PendingPageState extends State<PendingPage> {
           ],
         ),
       ),
-
       floatingActionButton: FloatingActionButton(
         backgroundColor: Cl.brandPrimaryBase,
         onPressed: () {

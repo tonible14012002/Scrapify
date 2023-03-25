@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 
 import '../navigation/navbar.dart';
 
+const ipConfig = '192.168.1.14:8000';
+
 // class User extends ChangeNotifier {
 //   Map _user = {};
 //
@@ -43,8 +45,7 @@ class ProductProvider extends ChangeNotifier {
   List<Map> get items => _items;
 
   Future<List<Map>> fetchItems(int donorProfile) async {
-    donorProfile = 1;
-    final url = Uri.parse('http://172.16.2.206:8000/matching/items/?donor_profile=1');
+    final url = Uri.parse('http://${ipConfig}/matching/items/?donor_profile=1');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as List;
@@ -54,21 +55,22 @@ class ProductProvider extends ChangeNotifier {
     } else {
       throw Exception('Failed to load data');
     }
-
   }
 }
 
-class Matched extends ChangeNotifier {
-  Map _matched = {};
+class MatchedProvider extends ChangeNotifier {
+  List<Map> _matched = [];
+  List<Map> get matched => _matched;
 
-  Map get matched => _matched;
-
-  Future<void> fetchMatched(int donorProfile) async {
-    final url = Uri.parse('192.168.1.8:8000/matching/matching/?item__donor_profile=${donorProfile}');
+  Future<List<Map>> fetchMatched(int donorProfile) async {
+    final url = Uri.parse(
+        'http://${ipConfig}/matching/matching/?item__donor_profile=1');
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      _matched = json.decode(response.body);
+      final json = jsonDecode(response.body) as List;
+      _matched = json.cast<Map>();
       notifyListeners();
+      return _matched;
     } else {
       throw Exception('Failed to load data');
     }
@@ -83,10 +85,9 @@ class DataProvider extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProductProvider()),
+        ChangeNotifierProvider(create: (_) => MatchedProvider()),
       ],
       child: Navbar(),
     );
   }
 }
-
-

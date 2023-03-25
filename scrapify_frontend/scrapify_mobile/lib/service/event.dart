@@ -2,12 +2,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class EventApi {
-  static const String url = 'http://172.16.2.206:8000/matching/events/?closed=false';
+  static const ipConfig = '192.168.1.14:8000';
+  static const String url = 'http://${ipConfig}/matching/events/?closed=false';
 
   static Future<List<Map>> getEvent() async {
-    print('thiss iss print');
+    print('chua chay');
     final response = await http.get(Uri.parse(url));
-    print('this is print ${response}');
+    print('da chay');
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as List;
       final result = json.cast<Map>();
@@ -16,7 +17,4 @@ class EventApi {
       return [];
     }
   }
-
-
-
 }

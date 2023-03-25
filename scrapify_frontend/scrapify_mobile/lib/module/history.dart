@@ -22,6 +22,7 @@ class HistoryPage extends StatefulWidget {
 }
 
 class HistoryPageState extends State<HistoryPage> {
+
   List<Map> products = [
     {
       'id': 1,
@@ -70,7 +71,7 @@ class HistoryPageState extends State<HistoryPage> {
             ),
           ),
           backgroundColor: Colors.white,
-          title:  Text(
+          title: const Text(
             'History',
             style: Font.subtitleLargeBold,
           ),
@@ -122,7 +123,7 @@ class HistoryPageState extends State<HistoryPage> {
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             PendingPage(),
             MatchedPage(),
