@@ -2,17 +2,12 @@ import { Routes, Route } from "react-router-dom";
 import DefaultLayout from "./layouts/DefaultLayout";
 import NoHeaderLayout from "./layouts/NoHeaderLayout/index.js";
 import { privateRoutes } from "./router/routes";
-import JWTManager from './auth/jwt'
 import AuthGuard from "./auth/AuthGuard";
 
 function App() {
 
-  console.log('========================')
-  console.log('access: ', !!JWTManager.getToken())
-  console.log('refresh', !!JWTManager.getRefreshToken())
-  
   return (
-    <AuthGuard>
+    // <AuthGuard>
       <Routes>
         {privateRoutes.map((route, index) => {
           const Page = route.component;
@@ -40,7 +35,7 @@ function App() {
           }
         />
       </Routes>
-    </AuthGuard>
+    // </AuthGuard>
   );
 }
 

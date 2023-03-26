@@ -1,5 +1,5 @@
 import axios from "axios";
-import JWTManager from "../auth/jwt";
+import JWTManager from "../auth/JWTManager";
 import * as AuthService from "../auth/authServices"
 
 // const baseSocketURL = '';
@@ -73,8 +73,8 @@ axiosClient.interceptors.request.use(
             return config
         }
 
-        JWTManager.setRefreshToken('')
-        JWTManager.setToken('')
+        JWTManager.clearRefreshToken()
+        JWTManager.clearToken()
 
         window.location.href = '/login'
     },

@@ -27,7 +27,7 @@ const privateRoutes = [
         path: 'logout/',
         component: Logout,
         layout: NoHeaderLayout
-    }
+    }, 
 ];
 
 export { privateRoutes };

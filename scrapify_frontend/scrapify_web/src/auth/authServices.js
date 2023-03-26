@@ -1,9 +1,9 @@
 import axios from "axios"
 import axiosClient from "../services/axiosClient"
-import JWTManager from "./jwt"
+import JWTManager from "./JWTManager"
 
 const logout = async () => {
-    return Promise(resolve => resolve({data: null}))
+    return new Promise(resolve => resolve({data: null}))
 }
 
 const login = async (params) => {

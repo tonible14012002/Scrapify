@@ -10,6 +10,15 @@ const JWTManager = () => {
         return sessionStorage.getItem('JWT')
     }
 
+    const clearToken = () => {
+        sessionStorage.setItem('JWT', '')
+    }
+
+    const clearRefreshToken = () => {
+        sessionStorage.setItem('RefreshJWT', '')
+
+    }
+
     const setRefreshToken = (token) => sessionStorage.setItem('RefreshJWT', token)
 
     const getRefreshToken = () => sessionStorage.getItem('RefreshJWT')
@@ -34,7 +43,9 @@ const JWTManager = () => {
         setRefreshToken,
         getRefreshToken,
         isTokenValid,
-        isRefreshTokenValid
+        isRefreshTokenValid, 
+        clearRefreshToken, 
+        clearToken
     }
     
 }

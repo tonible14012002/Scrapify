@@ -6,8 +6,30 @@
 
 * {
   font-family: 'Poppins', sans-serif;
+} 
+
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-#main {
-  overflow: overlay;
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+body {
+  overflow-y: overlay;
+}
+
+.no-scroll {
+  overflow-y: hidden;
 }

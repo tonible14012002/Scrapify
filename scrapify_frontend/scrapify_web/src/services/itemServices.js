@@ -6,5 +6,12 @@ const getDonorPosts = () => {
     return axiosClient.get('/matching/items/')
 }
 
+const sendRequestMail = () => {
+    return new Promise(resolve  => {
+        setTimeout(() => {
+            resolve()
+        }, 800);
+    })
+}
 
-export { getDonorPosts }
+export { getDonorPosts, sendRequestMail }

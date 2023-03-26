@@ -1,5 +1,6 @@
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faRefresh } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 import EButton from "../../components/Button";
 import { getDonorPosts } from "../../services/itemServices";
 import ItemList from "./components/ItemList";
@@ -8,11 +9,11 @@ import ItemList from "./components/ItemList";
 
 const Home = () => {
 
+    const [ donorItems, setDonorItems ] = useState([])
 
     const handleRequestAllPress = async () => {
         try {
             const result = await getDonorPosts()
-            console.log(result)
         }
         catch (e) {
 
@@ -21,17 +22,22 @@ const Home = () => {
 
 
     return (
-        <div className="w-full mt-20 h-14">
+        <div className="w-full mt-16">
             <div className="w-full">
                 <h3 className="text-center text-3xl desktop:text-4xl font-semibold">
-                    WELCOME TO <span className="text-teal-600">SCRAPIFY</span>
+                    Welcome to <span className="text-teal-600">Scrapify</span>
                 </h3>
-                <h3 className="text-center text-xl desktop:text-2xl font-light mt-2 text-zinc-600">
+                <h3 className="text-center text-lg desktop:text-xl font-light mt-2 text-zinc-600">
                     Find donors for your organization
                 </h3>
             </div>
             <div className="flex justify-center mt-10">
-                <EButton className="bg-teal-600 hover:bg-teal-700 transition-all min-w-[110px] py-4 px-8 text-white font-medium rounded-md"
+                <EButton className="
+                    bg-teal-600 hover:bg-teal-700 transition-all min-w-[110px] 
+                    desktop:py-4 desktop:px-8 text-white font-medium rounded-md
+                    desktop:min-w-[110px] py-3 px-6
+
+                    "
                     onClick={handleRequestAllPress}
                 >
                     <span>
@@ -42,7 +48,9 @@ const Home = () => {
                     </span>
                 </EButton>
             </div>
+
             <ItemList/>
+
         </div>
     )
 }

@@ -3,21 +3,23 @@ import { useNavigate } from "react-router-dom";
 
 import EButton from "../../components/Button";
 import * as AuthService from "../../auth/authServices";
-import { handleLoginFromJWT } from "../../auth/AuthManager";
+import { useAuthContext } from "../../context/authContext/authContext";
+import JWTManager from "../../auth/JWTManager"
 
 const Login = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigator = useNavigate()
+    const { setUser } = useAuthContext()
 
     const onSubmit = async data => {
         try {
             const res = await AuthService.login(data)
             const { access, refresh, user } = res.data
-            handleLoginFromJWT(access, refresh)
 
-            // store user info to context
-            // ...
+            JWTManager.setToken(access)
+            JWTManager.setRefreshToken(refresh)
+            setUser(user)
             
             navigator('/')
         }
