@@ -3,11 +3,12 @@ import DefaultLayout from "./layouts/DefaultLayout";
 import NoHeaderLayout from "./layouts/NoHeaderLayout/index.js";
 import { privateRoutes } from "./router/routes";
 import AuthGuard from "./auth/AuthGuard";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
 
   return (
-    // <AuthGuard>
+    <AuthGuard>
       <Routes>
         {privateRoutes.map((route, index) => {
           const Page = route.component;
@@ -18,7 +19,9 @@ function App() {
               path={route.path}
               element={
                 <Layout>
-                  <Page/>
+                  <ScrollToTop>
+                    <Page/>
+                  </ScrollToTop>
                 </Layout>
               }
             />
@@ -35,7 +38,7 @@ function App() {
           }
         />
       </Routes>
-    // </AuthGuard>
+    </AuthGuard>
   );
 }
 

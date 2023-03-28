@@ -41,7 +41,7 @@ const Item = () => {
     }
 
     return (
-        <div className="w-full flex flex-col relative p-4 bg-white border border-zinc-200 rounded-xl"
+        <div className="w-full flex flex-col relative p-4 bg-white border border-zinc-200 rounded-3xl"
         >
             <div className="bg-zinc-100 rounded-xl w-full p-[25%] tablet:p-[33%] desktop:p-[25%]">
             </div>
@@ -70,16 +70,16 @@ const Item = () => {
                     <span className="text-zinc-700 font-medium">Unknown</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                    <span className="text-xs px-3 py-2 tablet:px-2 tablet:py-1 bg-purple-500 rounded-lg text-amber-50 font-semibold">
+                    <span className="text-xs px-3 py-2 tablet:px-2 tablet:py-1 bg-orange-200 rounded-lg font-semibold text-zinc-600">
                         Cloth
                     </span>
-                    <span className="text-xs px-3 py-2 tablet:px-2 tablet:py-1 bg-purple-500 rounded-lg text-amber-50 font-semibold">
+                    <span className="text-xs px-3 py-2 tablet:px-2 tablet:py-1 bg-orange-200 rounded-lg font-semibold text-zinc-600">
                         Cloth
                     </span>
-                    <span className="text-xs px-3 py-2 tablet:px-2 tablet:py-1 bg-purple-500 rounded-lg text-amber-50 font-semibold">
+                    <span className="text-xs px-3 py-2 tablet:px-2 tablet:py-1 bg-orange-200 rounded-lg font-semibold text-zinc-600">
                         Cloth
                     </span>
-                    <span className="text-xs px-3 py-2 tablet:px-2 tablet:py-1 bg-purple-500 rounded-lg text-amber-50 font-semibold">
+                    <span className="text-xs px-3 py-2 tablet:px-2 tablet:py-1 bg-orange-200 rounded-lg font-semibold text-zinc-600">
                         Cloth
                     </span>
                     <span>....</span>

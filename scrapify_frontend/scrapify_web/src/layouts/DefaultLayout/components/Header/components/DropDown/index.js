@@ -4,10 +4,13 @@ import { faBars, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import usePageName from "../../../../../../hooks/usePageName";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../../../../../context/authContext/authContext";
 
 const DropDown = () => {
     const [ visible, setVisible ] = useState(false);
     const { pageName, pages } = usePageName();
+    const { user } = useAuthContext()
+
     const navigate = useNavigate()
 
     const handleClick = () => {
@@ -33,9 +36,11 @@ const DropDown = () => {
             <EButton className="ml-8 py-3 transition-all flex items-center hover:text-blue-400"
                 onClick={handleClick}
             >
-                <span className="mr-4 text-lg">
-                    Tony
-                </span>
+                <div className="mr-4 font-medium">
+                    {console.log(user)}
+                    <span></span>
+                    <span>{user.first_name}</span>
+                </div>
                 <div className="
                     rounded-md w-10 h-10 border-2 flex items-center justify-center border-slate-400
                         desktop:w-5 desktop:border-0

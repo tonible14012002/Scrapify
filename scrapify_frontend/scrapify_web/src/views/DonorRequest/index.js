@@ -1,3 +1,5 @@
+import RequestList from "./component/RequestList";
+import RequestStatusTabs from "./component/RequestStatusTabs";
 
 const DonorRequest = () => {
     return (
@@ -10,6 +12,10 @@ const DonorRequest = () => {
                     Find donors for your organization
                 </h3>
             </div>
+            <RequestStatusTabs/>
+            <RequestList
+                
+            />
         </div>
     )
 }
