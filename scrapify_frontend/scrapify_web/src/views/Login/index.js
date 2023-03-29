@@ -1,15 +1,13 @@
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 
 import EButton from "../../components/Button";
 import * as AuthService from "../../auth/authServices";
-import { useAuthContext } from "../../context/authContext/authContext";
+import { useAuthContext } from "../../context/authContext";
 import JWTManager from "../../auth/JWTManager"
 
 const Login = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const navigator = useNavigate()
     const { setUser } = useAuthContext()
 
     const onSubmit = async data => {
@@ -19,9 +17,16 @@ const Login = () => {
 
             JWTManager.setToken(access)
             JWTManager.setRefreshToken(refresh)
+
             setUser(user)
-            
-            navigator('/')
+            // Sync login
+            localStorage.setItem('login', JSON.stringify({
+                user,
+                tokenData: {
+                    access, 
+                    refresh
+                }
+            }))
         }
         catch (e) {
             console.log(e)

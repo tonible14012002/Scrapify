@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import * as AuthServices from "../../auth/authServices"
-import { useAuthContext } from "../../context/authContext/authContext"
+import { useAuthContext } from "../../context/authContext"
 import JWTManger from "../../auth/JWTManager"
 
 const Logout = () => {
@@ -20,12 +20,12 @@ const Logout = () => {
                 // trigger logout on all tabs
                 console.log('set Item')
                 // trigger logout on all tabs
-                window.localStorage.setItem('logout', Date.now())
+                localStorage.setItem('logout', Date.now())
             }
             catch(e) {
                 console.log(e)
             }
-            navigate('/login')
+            navigate('/')
         }
         logout()
     }
@@ -34,7 +34,7 @@ const Logout = () => {
 
     return (
         <div>
-        
+            Loging out ...
         </div>
     )
 }

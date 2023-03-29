@@ -4,29 +4,29 @@ import { faEnvelope, faEnvelopeCircleCheck, faUser, faWeightHanging } from "@for
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ItemDetail from "../ItemDetail";
 
-const ItemList = () => {
+const ItemList = ({items = [], ...props}) => {
 
     return (
         <div className="w-full mt-16 grid grid-cols-1 
                         tablet:px-6 tablet:grid-cols-2 gap-5 tablet:gap-5 desktop:gap-8
                         desktop:px-0 desktop:grid-cols-3
                         ">
-            <Item />
-            <Item />
-            <Item />
-            <Item />
-            <Item />
-            <Item />
-            <Item />
-            <Item />
-            <Item />
+            {items.map((item, index) => (
+                <Item
+                    key={item.id}
+                    data={item}
+                />
+            ))}
         </div>
     )
 }
 
-const Item = () => {
+const Item = ({data}) => {
+    console.log(data)
+
     const [isSent, setIsSent] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
+    const { name, weight, count, donor_username, categories } = data
 
     const handleSentRequest = () => {
         // 
@@ -51,15 +51,15 @@ const Item = () => {
                         className="font-semibold text-left text-zinc-700"
                         onClick={handleViewDetailPress}
                     >
-                        Old baby cloth
+                        {name}
                     </EButton>
                     <div className="text-purple-600 flex flex-row text-xs font-semibold">
-                        <span>x2</span>
+                        <span>x{count}</span>
                         &nbsp;
                         <div className="">
                             <FontAwesomeIcon icon={faWeightHanging}/>
                             &nbsp;
-                            <span>12 kg</span>
+                            <span>{weight} kg</span>
                         </div>
                     </div>
                 </div>
@@ -67,22 +67,16 @@ const Item = () => {
                     <div className=" w-[30px] h-[30px] border border-zinc-200 rounded-full bg-zinc-200 flex justify-center items-center text-white  ">
                         <FontAwesomeIcon icon={faUser}/>
                     </div>
-                    <span className="text-zinc-700 font-medium">Unknown</span>
+                    <span className="text-zinc-700 font-medium">{donor_username}</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                    <span className="text-xs px-3 py-2 tablet:px-2 tablet:py-1 bg-orange-200 rounded-lg font-semibold text-zinc-600">
-                        Cloth
-                    </span>
-                    <span className="text-xs px-3 py-2 tablet:px-2 tablet:py-1 bg-orange-200 rounded-lg font-semibold text-zinc-600">
-                        Cloth
-                    </span>
-                    <span className="text-xs px-3 py-2 tablet:px-2 tablet:py-1 bg-orange-200 rounded-lg font-semibold text-zinc-600">
-                        Cloth
-                    </span>
-                    <span className="text-xs px-3 py-2 tablet:px-2 tablet:py-1 bg-orange-200 rounded-lg font-semibold text-zinc-600">
-                        Cloth
-                    </span>
-                    <span>....</span>
+                    {categories.map((category, index) => (
+                        <span className="text-xs px-3 py-2 tablet:px-2 tablet:py-1 bg-orange-200 rounded-lg font-semibold text-zinc-600"
+                            key={category.id}
+                        >
+                            {category.name}
+                        </span>
+                    ))}
                 </div>
             </div>
             <EButton

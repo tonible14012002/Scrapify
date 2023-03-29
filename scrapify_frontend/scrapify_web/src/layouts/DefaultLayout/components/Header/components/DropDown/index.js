@@ -4,12 +4,13 @@ import { faBars, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import usePageName from "../../../../../../hooks/usePageName";
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../../../../../context/authContext/authContext";
+import { useAuthContext } from "../../../../../../context/authContext";
+import { getFullName } from "../../../../../../utils";
 
 const DropDown = () => {
     const [ visible, setVisible ] = useState(false);
     const { pageName, pages } = usePageName();
-    const { user } = useAuthContext()
+    const { user: { last_name, first_name, username } } = useAuthContext()
 
     const navigate = useNavigate()
 
@@ -37,9 +38,8 @@ const DropDown = () => {
                 onClick={handleClick}
             >
                 <div className="mr-4 font-medium">
-                    {console.log(user)}
                     <span></span>
-                    <span>{user.first_name}</span>
+                    <span>{getFullName(first_name, last_name) || username || "Guest"}</span>
                 </div>
                 <div className="
                     rounded-md w-10 h-10 border-2 flex items-center justify-center border-slate-400

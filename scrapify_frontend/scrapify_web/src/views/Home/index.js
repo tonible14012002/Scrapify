@@ -2,7 +2,7 @@ import { faPaperPlane, faRefresh } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import EButton from "../../components/Button";
-import { useAuthContext } from "../../context/authContext/authContext";
+import { useAuthContext } from "../../context/authContext";
 import { getDonorPosts } from "../../services/itemServices";
 import ItemList from "./components/ItemList";
 
@@ -15,6 +15,7 @@ const Home = () => {
     const handleRequestAllPress = async () => {
         try {
             const result = await getDonorPosts()
+            setDonorItems(result.data)
         }
         catch (e) {
 
@@ -50,7 +51,9 @@ const Home = () => {
                 </EButton>
             </div>
 
-            <ItemList/>
+            <ItemList
+                items={donorItems}
+            />
 
         </div>
     )

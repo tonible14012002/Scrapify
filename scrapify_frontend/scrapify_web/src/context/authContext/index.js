@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import AuthGuard from "../../auth/AuthGuard";
 
 
 const AuthContext = createContext({
@@ -18,7 +19,7 @@ const AuthProvider = ({children}) => {
 
     return (
         <AuthContext.Provider value={authState}>
-            {children}
+                {children}
         </AuthContext.Provider>
     )
 }

@@ -64,7 +64,7 @@ axiosClient.interceptors.request.use(
                 catch(e) {
                     isRefreshing = false
                     console.log('refreshing error', e)
-                    window.location.href = '/login'
+                    window.location.href = window.location.pathname
                 }
                 return config
             }
@@ -76,7 +76,9 @@ axiosClient.interceptors.request.use(
         JWTManager.clearRefreshToken()
         JWTManager.clearToken()
 
-        window.location.href = '/login'
+        // Reload page for auth guard
+        window.location.href = window.location.pathname
+        
     },
     error => Promise.reject(error)
 )

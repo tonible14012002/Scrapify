@@ -16,4 +16,8 @@ const refreshToken = async () => {
     })
 }
 
-export { logout, login, refreshToken }
+const me = async (token) => {
+    return axios.post('http://127.0.0.1:8000/account/auth/me/', {token})
+}
+
+export { logout, login, refreshToken, me }

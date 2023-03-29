@@ -12,7 +12,7 @@ const Modal = ({children, onClose ,...props}) => {
     }
 
     const handleCloseOnClickOutside = (e) => {
-        if (e.target === overlay.current) {
+        if (e.target === overlay.current && onClose) {
             // click outside children
             onClose()
         }

@@ -1,4 +1,4 @@
-import { useAuthContext } from "../../../../context/authContext/authContext";
+import { useAuthContext } from "../../../../context/authContext";
 import DropDown from "./components/DropDown";
 import PageRoute from "./components/PageRoute";
 

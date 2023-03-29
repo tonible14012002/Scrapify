@@ -1,21 +1,12 @@
++ useSyncAuth
+    - only get token for new tab
+    - do not know token is valid or not
 
++ AuthGuard
+    - Checking token is valid -> loading page
+    - if valid -> render children
+    - if not valid -> render login page
 
-
-checkJWT in storage
-checkRefreshJWT in storage
-
-handleLogin
-    => fetch API
-        => Success -> store JWT in storage -> handle User context
-        include JWT in axios
-
-Logged in
-    => listen to error response
-    => check refresh Token isvalid => refresh token => store 
-
-Guard
-    => check JWT in storage
-    else redirect to login
-
-Logout
-    => clear access, refresh JWT in storage
++ axios client
+    - silent refresh token
+    - redirect to login page if token expired

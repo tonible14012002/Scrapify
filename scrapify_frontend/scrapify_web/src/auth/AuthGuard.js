@@ -1,77 +1,74 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { AuthProvider } from "../context/authContext/authContext"
+import { useAuthContext } from "../context/authContext"
+import useIsMounted from "../hooks/useIsMounted"
+import { me } from "./authServices"
 import JWTManager from "./JWTManager"
+import Login from "../views/Login"
+import { useSyncContext } from "../context/SyncContext"
 
-const AuthGuard = ({children}) => {
+const AuthGuard = ({
+    children
+}) => {
 
     const navigate = useNavigate()
-    const [ isLoading, setIsLoading] = useState(true)
-
-    const handleSyncLogout = () => {
-        console.log('add event listneer')
-        // Logout when logout key is set in sessionStorage
-        const syncLogout = (event) => {
-            console.log('sync logout', event)
-            if (event.key === 'logout') {
-                navigate('/login')
-            }
-        }
-
-        window.addEventListener('storage', syncLogout)
-        return () => window.removeEventListener('storage', syncLogout)
-    }
-
-    const handleSyncAuthentication = () => {
-        console.log('handle sync auth')
-        if (!sessionStorage.length) {
-            // request session from other tab
-            localStorage.setItem('getSessionStorage', Date.now())
-        }
-
-        const syncSessionStorage = (event) => {
-            console.log('local set from other tab')
-            if (event.key === 'getSessionStorage') {
-                // trigger share
-                localStorage.setItem('sessionStorage', JSON.stringify(sessionStorage))
-                localStorage.removeItem('sessionStorage')
-            }
-            else if (event.key === 'sessionStorage') {
-                console.log(event.newValue)
-                // fill empty session storage
-                const data = JSON.parse(event.newValue)
-                for (let key in data) {
-                    sessionStorage.setItem(key, data[key])
-                }
-                console.log(event)
-            }
-        }
-
-        window.addEventListener('storage', syncSessionStorage)
-        return () => window.removeEventListener('storage', syncSessionStorage)
-    }
+    const { syncTrigger } = useSyncContext()
+    const { user, setUser } = useAuthContext()
+    const [ isLoading, setIsLoading ] = useState(false)
+    const [ isAuthenticated, setIsAuthenticated ] = useState(false)
+    const isMounted = useIsMounted()
 
     const handleTokenGuard = () => {
-        setIsLoading(true)
-        if (
-            ! ((JWTManager.getToken() && JWTManager.isTokenValid()) ||
-            (JWTManager.getRefreshToken() && JWTManager.isRefreshTokenValid()))
-        ) {
-            navigate('/login')
-        }
 
-        setIsLoading(false)
+        const tokenIsValid = JWTManager.getToken() && JWTManager.isTokenValid()
+        const refreshTokenIsValid = JWTManager.getRefreshToken() && JWTManager.isRefreshTokenValid()
+        const isAuth = tokenIsValid || refreshTokenIsValid
+
+        if (isAuth) {
+            if (user) { 
+                setIsAuthenticated(true)
+                return
+            }
+
+            const validToken = (
+                tokenIsValid ? JWTManager.getToken() : JWTManager.getRefreshToken()
+            )
+
+            const getMyProfile = async () => {
+                try {
+                    setIsLoading(true)
+                    const result = await me(validToken)
+                    if (isMounted.current) {
+                        setUser(result.data)
+                        setIsAuthenticated(true)
+                    }
+                }
+                catch (e) {
+                    console.log(e)
+                    setIsAuthenticated(false)
+                }
+                if (isMounted.current) {
+                    setIsLoading(false)
+                }
+            }
+            getMyProfile()
+        }
+        else {
+            setIsAuthenticated(false)
+        }
     }
 
-    useEffect(handleSyncLogout, [navigate])
-    useEffect(handleTokenGuard, [navigate])
-    useEffect(handleSyncAuthentication, [])
+    
 
-    if (isLoading) return <div></div>
+    useEffect(handleTokenGuard, [navigate, setUser, user,  isMounted, syncTrigger])
+
     return (
-        <AuthProvider>
-            {children}
-        </AuthProvider>
+        <>
+            {isLoading ?
+            <div>Loading...</div>:
+            isAuthenticated ? children :
+            <Login/>}
+        </>
     )
 }
 

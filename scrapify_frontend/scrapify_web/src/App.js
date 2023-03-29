@@ -2,43 +2,49 @@ import { Routes, Route } from "react-router-dom";
 import DefaultLayout from "./layouts/DefaultLayout";
 import NoHeaderLayout from "./layouts/NoHeaderLayout/index.js";
 import { privateRoutes } from "./router/routes";
-import AuthGuard from "./auth/AuthGuard";
 import ScrollToTop from "./components/ScrollToTop";
+import { AuthProvider } from "./context/authContext";
+import AuthGuard from "./auth/AuthGuard";
+import { SyncProvider } from "./context/SyncContext";
 
 function App() {
 
   return (
-    <AuthGuard>
-      <Routes>
-        {privateRoutes.map((route, index) => {
-          const Page = route.component;
-          const Layout = route.layout || DefaultLayout;
-          return (
-            <Route 
-              key={index}
-              path={route.path}
+      <AuthProvider>
+        <SyncProvider>
+          <Routes>
+            {privateRoutes.map((route, index) => {
+              const Page = route.component
+              const Layout = route.layout || DefaultLayout
+              return (
+                <Route 
+                  key={index}
+                  path={route.path}
+                  element={
+                    <AuthGuard>
+                      <Layout>
+                        <ScrollToTop>
+                          <Page/>
+                        </ScrollToTop>
+                      </Layout>
+                    </AuthGuard>
+                  }
+                />
+              )
+            })}
+            <Route
+              path="*"
               element={
-                <Layout>
-                  <ScrollToTop>
-                    <Page/>
-                  </ScrollToTop>
-                </Layout>
+                <NoHeaderLayout>
+                  <div>
+                    not found
+                  </div>
+                </NoHeaderLayout>
               }
             />
-          )
-        })}
-        <Route
-          path="*"
-          element={
-            <NoHeaderLayout>
-            <div>
-              not found
-            </div>
-            </NoHeaderLayout>
-          }
-        />
-      </Routes>
-    </AuthGuard>
+          </Routes>
+        </SyncProvider>
+      </AuthProvider>
   );
 }
 

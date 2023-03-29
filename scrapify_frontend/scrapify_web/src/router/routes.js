@@ -1,5 +1,4 @@
 import NoHeaderLayout from "../layouts/NoHeaderLayout/index.js";
-import Login from "../views/Login";
 import Event from "../views/Event/index.js";
 import DonorRequest from "../views/DonorRequest/index.js";
 import Home from "../views/Home/index.js";
@@ -9,11 +8,6 @@ const privateRoutes = [
     {
         path: '',
         component: Home,
-    },
-    {
-        path: 'login',
-        component: Login,
-        layout: NoHeaderLayout
     },
     {
         path: 'events/',
@@ -30,4 +24,10 @@ const privateRoutes = [
     }, 
 ];
 
-export { privateRoutes };
+const publicRoutes = [
+    {
+
+    },
+]
+
+export { privateRoutes, publicRoutes };
