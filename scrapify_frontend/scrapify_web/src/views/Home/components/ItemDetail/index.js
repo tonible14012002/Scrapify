@@ -4,22 +4,36 @@ import { useState } from "react";
 import EButton from "../../../../components/Button";
 import Modal from "../../../../components/Modal";
 import CompactPara from "../../../../components/ReadMore";
+import useIsMounted from "../../../../hooks/useIsMounted";
 import { sendRequestMail } from "../../../../services/itemServices";
 
-const ItemDetail = ({onClose, ...props}) => {
+const ItemDetail = ({data, onClose, ...props}) => {
     const [ isSent, setIsSent ] = useState(false)
     const [ loading, setLoading ] = useState(false)
 
+    const { 
+        name, weight, count, 
+        description, donor_profile, 
+        donor_username, 
+        created_at
+      } = data
+
+    const isMounted = useIsMounted()
+
     const handleSendRequest = async () => {
         setLoading(true)
-            try {
-                const result = await sendRequestMail
+        try {
+            const result = await sendRequestMail()
+            if (isMounted()) {
                 setIsSent(true)
             }
-            catch (e) {
-                console.log(e)
-            }
-        setLoading(false)
+        }
+        catch (e) {
+            console.log(e)
+        }
+        if (isMounted()) {
+            setLoading(false)
+        }
     }
 
     return (
@@ -29,7 +43,7 @@ const ItemDetail = ({onClose, ...props}) => {
                     <img alt="" href=""/>
                 </div>
                 <div className="tablet:w-[400px] bg-white rounded-lg relative">
-                    <h3 className="text-xl px-4 py-2 text-zinc-800 font-semibold">Old Baby Clothes</h3>
+                    <h3 className="text-xl px-4 py-2 text-zinc-800 font-semibold">{name}</h3>
                     <div className="px-4 h-full min-h-[400px] max-h-[500px] overflow-y-auto">
                         <div className="">
                             <label className="font-medium text-xs text-purple-600">Photos</label>
@@ -48,19 +62,7 @@ const ItemDetail = ({onClose, ...props}) => {
                         <div className="mt-2">
                             <label className="font-medium text-xs text-purple-600">Descriptions</label>
                             <CompactPara className="text-zinc-700 text-sm mt-1">
-                                Including 2 T shirt for 2 months baby and a jacket. I bought these a few months ago.
-                                Including 2 T shirt for 2 months baby and a jacket. I bought these a few months ago.
-                                Including 2 T shirt for 2 months baby and a jacket. I bought these a few months ago.
-                                Including 2 T shirt for 2 months baby and a jacket. I bought these a few months ago.
-                                Including 2 T shirt for 2 months baby and a jacket. I bought these a few months ago.
-                                Including 2 T shirt for 2 months baby and a jacket. I bought these a few months ago.
-                                Including 2 T shirt for 2 months baby and a jacket. I bought these a few months ago.
-                                Including 2 T shirt for 2 months baby and a jacket. I bought these a few months ago.
-                                Including 2 T shirt for 2 months baby and a jacket. I bought these a few months ago.
-                                Including 2 T shirt for 2 months baby and a jacket. I bought these a few months ago.
-                                Including 2 T shirt for 2 months baby and a jacket. I bought these a few months ago.
-                                Including 2 T shirt for 2 months baby and a jacket. I bought these a few months ago.
-                                Including 2 T shirt for 2 months baby and a jacket. I bought these a few months ago.
+                                {description}
                             </CompactPara>
                         </div>
                         <div className="mt-2 mb-2">
@@ -72,7 +74,7 @@ const ItemDetail = ({onClose, ...props}) => {
                                     <div className="w-[40px] h-[40px] rounded-full bg-zinc-300">
                                         <image href=""/>
                                     </div>
-                                    <span className="text-sm font-semibold text-zinc-600">Nam Anh bui</span>
+                                    <span className="text-sm font-semibold text-zinc-600">{donor_username}</span>
                                 </div>
                                 <EButton className="ml-4 text-teal-600" 
                                     onClick={() => alert('feature')}

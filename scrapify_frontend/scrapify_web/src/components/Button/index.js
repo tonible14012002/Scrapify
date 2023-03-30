@@ -4,7 +4,7 @@ const EButton = ({
     onClick,
     href,
     children,
-    disabled,
+    disabled=false,
     to,
     className,
     ...passProps

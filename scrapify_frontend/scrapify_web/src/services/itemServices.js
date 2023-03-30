@@ -2,8 +2,8 @@ import axiosClient from "./axiosClient"
 
 
 
-const getDonorPosts = () => {
-    return axiosClient.get('/matching/items/')
+const getDonorUnMatchedItems = () => {
+    return axiosClient.get('/matching/items/?matched=false&shuffle=true')
 }
 
 const sendRequestMail = () => {
@@ -14,4 +14,4 @@ const sendRequestMail = () => {
     })
 }
 
-export { getDonorPosts, sendRequestMail }
+export { getDonorUnMatchedItems, sendRequestMail }

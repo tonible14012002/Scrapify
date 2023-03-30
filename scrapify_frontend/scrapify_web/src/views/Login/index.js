@@ -4,11 +4,13 @@ import EButton from "../../components/Button";
 import * as AuthService from "../../auth/authServices";
 import { useAuthContext } from "../../context/authContext";
 import JWTManager from "../../auth/JWTManager"
+import { useState } from "react";
 
 const Login = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { setUser } = useAuthContext()
+    const [ errorMsg, setErrorMsg ] = useState("")
 
     const onSubmit = async data => {
         try {
@@ -29,7 +31,7 @@ const Login = () => {
             }))
         }
         catch (e) {
-            console.log(e)
+            setErrorMsg("No account match your credentials")
         }
     }
 
@@ -44,7 +46,9 @@ const Login = () => {
                 <span className="text-teal-600"> Scapify
                 </span>
             </h3>
-            <h3 className="text-xl desktop:text-3xl font-normal text-zinc-600 mb-10">Let's sign you in</h3>
+            <h3 className="text-xl desktop:text-3xl font-normal text-zinc-600 mb-6">Let's sign you in</h3>
+
+            <span className="mb-4 block text-red-400 font-medium">{errorMsg}</span>
 
             <div className="flex flex-col gap-6">
                 <input

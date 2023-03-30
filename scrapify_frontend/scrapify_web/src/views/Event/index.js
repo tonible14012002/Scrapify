@@ -2,14 +2,20 @@ import EButton from "../../components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import EventList from "./components/EventList";
-import { useCallback, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import EventForm from "./components/EventForm";
+import useIsMounted from "../../hooks/useIsMounted";
+import { getMyEvents } from "../../services/eventServices";
+import eventReducer from "./eventReducer";
 
 
 
 const Event = () => {
 
+    const [ myEvents, myEventDispatcher ] = useReducer(eventReducer, [])
     const [ showForm, setShowForm ] = useState(false)
+    const [ loading, setLoading ] = useState(false)
+    const isMounted = useIsMounted()
 
     const handleCreateEventPress = () => {
         setShowForm(true)
@@ -18,6 +24,26 @@ const Event = () => {
     const handleCloseEventForm = () => {
         setShowForm(false)
     }
+
+    const handleGetMyEvents = () => {
+        const fetchMyEvents = async () => {
+            try {
+                setLoading(true)
+                const result = await getMyEvents()
+                myEventDispatcher({type: "get", data: result.data})
+            }
+            catch (e) {
+                console.log(e)
+            }
+            if (isMounted()) {
+                setLoading(false)
+            }
+        }
+
+        fetchMyEvents()
+    }
+
+    useEffect(handleGetMyEvents, [isMounted])
     
     return (
         <div className="w-full mt-16">
@@ -36,6 +62,7 @@ const Event = () => {
                     desktop:min-w-[110px] py-3 px-6
                     "
                     onClick={handleCreateEventPress}
+                    disabled={loading}
                 >
                     <span>
                         Create new Event
@@ -45,8 +72,12 @@ const Event = () => {
                     </span>
                 </EButton>
             </div>
+
             <EventList
+                items={myEvents}
+                isLoading={loading}
             />
+
             {showForm &&
             <EventForm
                 onClose={handleCloseEventForm}

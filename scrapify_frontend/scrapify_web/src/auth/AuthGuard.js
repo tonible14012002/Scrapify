@@ -38,7 +38,7 @@ const AuthGuard = ({
                 try {
                     setIsLoading(true)
                     const result = await me(validToken)
-                    if (isMounted.current) {
+                    if (isMounted()) {
                         setUser(result.data)
                         setIsAuthenticated(true)
                     }
@@ -47,7 +47,7 @@ const AuthGuard = ({
                     console.log(e)
                     setIsAuthenticated(false)
                 }
-                if (isMounted.current) {
+                if (isMounted()) {
                     setIsLoading(false)
                 }
             }

@@ -1,9 +1,9 @@
 import { faPaperPlane, faRefresh } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EButton from "../../components/Button";
-import { useAuthContext } from "../../context/authContext";
-import { getDonorPosts } from "../../services/itemServices";
+import useIsMounted from "../../hooks/useIsMounted";
+import { getDonorUnMatchedItems } from "../../services/itemServices";
 import ItemList from "./components/ItemList";
 
 
@@ -11,17 +11,45 @@ import ItemList from "./components/ItemList";
 const Home = () => {
     
     const [ donorItems, setDonorItems ] = useState([])
+    const [ loading, setLoading ] = useState(false)
+    const  isMounted =  useIsMounted() 
 
-    const handleRequestAllPress = async () => {
+    const handleGetDonorItems = () => {
+        const fetchItems = async ()  => {
+            try {
+                setLoading(true)
+                const result = await getDonorUnMatchedItems()
+                if (isMounted()) {
+                    setDonorItems(result.data)
+                }
+            }
+            catch (e) {
+                console.log(e)
+            }
+            if (isMounted()) {
+                setLoading(false)
+            }
+        }
+        fetchItems()
+    }
+
+    const handleRefetchRandomUnSeenItems = async () => {
+        setLoading(true)
         try {
-            const result = await getDonorPosts()
-            setDonorItems(result.data)
+            const result = await getDonorUnMatchedItems()
+            if (isMounted()) {
+                setDonorItems(result.data)
+            }
         }
         catch (e) {
-
+            console.log(e)
+        }
+        if (isMounted()) {
+            setLoading(false)
         }
     }
 
+    useEffect(handleGetDonorItems, [isMounted])
 
     return (
         <div className="w-full mt-16">
@@ -38,12 +66,11 @@ const Home = () => {
                     bg-teal-600 hover:bg-teal-700 transition-all min-w-[110px] 
                     desktop:py-4 desktop:px-8 text-white font-medium rounded-md
                     desktop:min-w-[110px] py-3 px-6
-
                     "
-                    onClick={handleRequestAllPress}
+                    onClick={handleRefetchRandomUnSeenItems}
                 >
                     <span>
-                    Request all
+                        Request all
                     </span>
                     <span className="ml-4">
                         <FontAwesomeIcon icon={faPaperPlane}/>
@@ -52,6 +79,7 @@ const Home = () => {
             </div>
 
             <ItemList
+                isLoading={loading}
                 items={donorItems}
             />
 
