@@ -6,6 +6,7 @@ const CloseButton = (props) => {
 
     return (
         <EButton className="absolute rounded-full w-[30px] h-[30px] right-0 top-0 translate-x-1/2 -translate-y-1/2 shadow-md bg-white"
+            type="button"
             {...props}
         >
             <FontAwesomeIcon icon={faClose}/>
