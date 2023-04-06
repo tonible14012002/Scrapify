@@ -12,7 +12,7 @@ import eventReducer from "./eventReducer";
 
 const Event = () => {
 
-    const [ myEvents, myEventDispatcher ] = useReducer(eventReducer, [])
+    const [ events, dispatcher ] = useReducer(eventReducer, [])
     const [ showForm, setShowForm ] = useState(false)
     const [ loading, setLoading ] = useState(false)
     const isMounted = useIsMounted()
@@ -30,7 +30,7 @@ const Event = () => {
             try {
                 setLoading(true)
                 const result = await getMyEvents()
-                myEventDispatcher({type: "get", data: result.data})
+                dispatcher({type: "get", data: result.data})
             }
             catch (e) {
                 console.log(e)
@@ -74,12 +74,14 @@ const Event = () => {
             </div>
 
             <EventList
-                items={myEvents}
+                items={events}
+                dispatcher={dispatcher}
                 isLoading={loading}
             />
 
             {showForm &&
             <EventForm
+                dispatcher={dispatcher}
                 onClose={handleCloseEventForm}
             />}
         </div>

@@ -31,7 +31,7 @@ const EventItem = ({data}) => {
 
     const [ showDetailModal, setShowDetailModal ] = useState(false)
     const {
-        id, name, address, banner, closed, created_at: createdAt, categories,
+        id, name, address, images, closed, created_at: createdAt, categories,
         end_time: endTime, description, recipient_avatar:recipientAvatar, 
         recipient_name:recipientName, start_time:startTime, recipient_profile:recipientProfileID
     } = data
@@ -53,7 +53,12 @@ const EventItem = ({data}) => {
             <EButton className="text-left w-full"
                 onClick={handlePress}
             >
-                <div className="w-full p-[25%] bg-zinc-100 shadow-sm rounded-xl"> 
+                <div className="w-full p-[25%] bg-zinc-100 shadow-sm rounded-xl relative overflow-hidden"> 
+                    <img
+                        className="absolute top-0 left-0 w-full h-full object-cover"
+                        alt=""
+                        src={images[0] || ""}
+                    />
                 </div>
                 <div className="mt-4">
                     <h3 className="font-semibold text-zinc-700 text-lg">

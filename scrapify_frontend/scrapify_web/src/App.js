@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import DefaultLayout from "./layouts/DefaultLayout";
 import NoHeaderLayout from "./layouts/NoHeaderLayout/index.js";
-import { privateRoutes } from "./router/routes";
+import { privateRoutes, publicRoutes } from "./router/routes";
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./context/authContext";
 import AuthGuard from "./auth/AuthGuard";

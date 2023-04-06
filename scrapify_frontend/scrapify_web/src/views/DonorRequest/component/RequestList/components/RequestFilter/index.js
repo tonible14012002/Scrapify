@@ -29,19 +29,20 @@ const SearchBar = () => {
     )
 }
 
-const EventSelector = () => {
+const EventSelector = ({
+    onChange, 
+    options = [
+        "All", 
+        "Homanitarian Careers for Woman in ICRCs",
+        "Homanitarian Careers for Woman in ICRCs",
+        "Homanitarian in "
+    ]
+}) => {
 
     const [ showDropDown, setShowDropDown] = useState(false)
     const [ selectedId, setSelectedId ] = useState(0)
 
     const selectorWrapperRef = useRef()
-
-    const options = useRef([
-        "All", 
-        "Homanitarian Careers for Woman in ICRCs",
-        "Homanitarian Careers for Woman in ICRCs",
-        "Homanitarian in "
-    ])
 
     const handleSelectorPress = () => {
         setShowDropDown(prev => !prev)
@@ -65,7 +66,7 @@ const EventSelector = () => {
             <EButton className="w-full h-full text-left px-4 text-zinc-600"
                 onClick={handleSelectorPress}
             >
-                {options.current[selectedId]}
+                {options[selectedId]}
             </EButton>
             <span className="absolute right-5 text-xs top-1/2 -translate-y-1/2 z-100 text-zinc-500"
             >
@@ -76,8 +77,9 @@ const EventSelector = () => {
             <ul className="absolute top-12 border bg-white shadow-sm w-full rounded-xl
                  flex flex-col max-h-[400px] overflow-auto"
             >
-                {options.current.map((item, index) => (
+                {options.map((item, index) => (
                     <EButton className={`${selectedId === index ? "bg-zinc-100": "hover:bg-zinc-50"} text-left px-4 py-2 transition-colors`}
+                        key={index}
                         onClick={() => handleOptionPress(index)}
                     >
                         {item}
@@ -143,7 +145,6 @@ const MatchFilter = () => {
                 {options.map((item, index) => (
                     <EButton className={`${selectedIds.includes(index) && "bg-zinc-100"}
                             text-left px-4 py-1 text-zinc-600 transition-colors last:rounded-b-xl first:rounded-t-xl`}
-
                         key={index}
                         onClick={() => handleOptionPress(index)}
                     >

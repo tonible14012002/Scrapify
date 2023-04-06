@@ -41,15 +41,31 @@ const SyncProvider = ({children}) => {
         return () => window.removeEventListener('storage', syncSessionStorage)
     }
 
-    const handleTabNumberTracking = () => {
-        // register to tracker
-        const count = localStorage.getItem('tabcount') ?? 0
-        localStorage.setItem('tabcount', count + 1)
+    const handleTabCountTracker = () => {
 
-        return () => {
-            const count = localStorage.getItem('tabcount')
-            localStorage.setItem('tabcount', count - 1)
+        const handleTabOpen = () => {
+            const tabCount = Number(localStorage.getItem('tabcount'))
+            if (tabCount) {
+                localStorage.setItem('tabcount', tabCount + 1)
+            }
+            else {
+                localStorage.setItem('tabcount', 1)
+            }
         }
+
+        const handleTabClose = () => {
+            const tabCount = Number(localStorage.getItem('tabcount'))
+            if (tabCount) {
+                localStorage.setItem('tabcount', tabCount - 1)
+            }
+            else {
+                localStorage.setItem('tabcount', 0)
+            }
+        }
+
+        window.onunload =  handleTabClose
+        window.onload =  handleTabOpen
+
     }
 
     const handleSyncLogout = () => {
@@ -79,7 +95,7 @@ const SyncProvider = ({children}) => {
         return () => window.removeEventListener('storage', syncLogin)
     }
     
-    useEffect(handleTabNumberTracking, [])
+    useEffect(handleTabCountTracker, [])
     useEffect(handleSyncAuthenticationSession, [])
     useEffect(handleSyncLogout, [setUser])
     useEffect(handleSyncLogin, [setUser])

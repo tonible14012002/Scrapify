@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, memo } from "react"
 import useOnClickedOutSide from "../../hooks/useOnClickedOutside"
 import EButton from "../Button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -99,4 +99,4 @@ const Selector = ({
     )
 }
 
-export default Selector
+export default memo(Selector)

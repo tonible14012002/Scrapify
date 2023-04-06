@@ -58,8 +58,6 @@ const AuthGuard = ({
         }
     }
 
-    
-
     useEffect(handleTokenGuard, [navigate, setUser, user,  isMounted, syncTrigger])
 
     return (
