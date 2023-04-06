@@ -16,12 +16,15 @@ class RecipientProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class MyUserSerializer(serializers.ModelSerializer):
+    """
+    Read only Serializer for user account
+    """
     recipient_profile = serializers.SerializerMethodField()
     donor_profile = serializers.SerializerMethodField()
 
     class Meta:
         model = MyUser
-        fields = ['id', 'username', 'phone', 'email', 'address', 'is_staff',
+        fields = ['id', 'username', 'phone', 'email', 'address', 'is_staff', 'last_name', 'first_name',
                   'is_recipient', 'recipient_profile', 'donor_profile']
     
     def get_recipient_profile(self, user):

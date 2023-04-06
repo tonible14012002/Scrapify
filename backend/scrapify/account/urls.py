@@ -11,7 +11,7 @@ router.register('', MyUserViewSet, basename='user')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('user-detail-from-refresh/', views.get_user_from_refresh),
+    path('auth/me/', views.get_user_from_refresh),
     path('auth/token/', MyTokenObtainPairView.as_view()),
     path('auth/token/refresh/', MyTokenRefreshView.as_view())
 ]

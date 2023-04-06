@@ -28,6 +28,8 @@ SECRET_KEY = 'django-insecure-xjmu79+6m)&lf-7v6+(b(@m5#(!=@1^xf2f94f4jr!o_scu1a0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+APPEND_SLASH = False
+
 ALLOWED_HOSTS = ['*']
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -50,13 +52,18 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.MultiPartParser',
         'rest_framework.parsers.FormParser',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FileUploadParser',
+        'rest_framework.parsers.FormParser'
     ]
-
 }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(seconds=10),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=10),
     'ALGORITHM': 'HS256',
 }
 
@@ -127,11 +134,11 @@ WSGI_APPLICATION = 'scrapify.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'scrapify',
-        'USER': 'postgres',
-        'PASSWORD': '71102Tony',
-        'HOST': 'localhost',
-        'PORT': 5433
+        'NAME': 'wvaumyac',
+        'USER': 'wvaumyac',
+        'PASSWORD': '9mD4zPG3sUyF_RNpKIeIoRYOZ8IK5Az3',
+        'HOST': 'satao.db.elephantsql.com',
+        'PORT': 5432
     }
 }
 

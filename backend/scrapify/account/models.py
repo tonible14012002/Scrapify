@@ -20,7 +20,7 @@ class RecipientProfile(models.Model):
     website_url = models.CharField(max_length=200, null=True, blank=True)
     avatar = models.ImageField(upload_to='user/{instance.username}', null=True)
     founder = models.CharField(max_length=100, null=True, blank=True)
-    desciption = models.TextField(null=False)
+    description = models.TextField(null=False)
 
     def get_username(self):
         return self.user.username
@@ -63,3 +63,5 @@ class MyUser(AbstractUser):
 
     def __str__(self):
         return self.username
+    
+    

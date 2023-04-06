@@ -5,7 +5,7 @@ from matching.models import Category, Item, Event, Matching
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('id', 'name')
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):

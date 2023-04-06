@@ -1,0 +1,47 @@
+
+NON FUNCTIONAL REQUIREMENTs
+- Donor View
+    + View My Items
+        > Item detail
+    + View Other Items
+        > Item detail, other user's simple info
+
+    + View Event
+        > Event Detail 
+        > Event Organization info
+    
+    + View My Matching
+        > View Matching detail
+            > Event detail status, ...
+            > include Id of user's Item
+
+- Recipient View
+    + View Donors' Item ( == Donor View other Items)
+        > Item detail
+        > Donor simple info
+    + View My Event
+        > Event detail
+        > dont include Organization info
+    + View My Matching
+        > Item Detail
+        > dont include Organization info 
+    
+==================================================
+- Item Serializer
+    + Fields 
+        > All Item Detail Fields
+        + ? is Donor 
+           > True:? My Item
+                > True => Done (optional)
+                > False => Include User simple detail 
+            > Fasle:
+                > Include User simple Detail
+                > Matched && Include User detail 
+
+- Event Serializer 
+    + Fields
+        > ALL Event detail fields
+        + ? Is Donor
+            > True: Include Organization Detail
+            > False: My Event
+                > Include only Event fields

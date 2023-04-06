@@ -4,7 +4,8 @@ from rest_framework.generics import (
     CreateAPIView,
     DestroyAPIView, 
     RetrieveAPIView, 
-    ListAPIView
+    ListAPIView, 
+    UpdateAPIView
 )
 from django.contrib.auth import get_user_model
 from account.serializers import (
@@ -28,11 +29,16 @@ MyUser = get_user_model()
 class MyUserViewSet(ViewSet,
                     ListAPIView,
                     RetrieveAPIView,
+                    UpdateAPIView,
                     CreateAPIView):
     queryset = MyUser.objects.all()
-    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['is_recipient']
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return []
+        return [IsAuthenticated()]
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -41,7 +47,7 @@ class MyUserViewSet(ViewSet,
 
 @api_view(['POST'])
 def get_user_from_refresh(request):
-    refresh = request.data.get('refresh', None)
+    refresh = request.data.get('token', None)
 
     if refresh:
         try:

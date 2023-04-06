@@ -1,22 +1,30 @@
 from rest_framework import serializers
-from matching.models import Event, Item, Category, Matching, Care
-from account.serializers import DonorProfileSerializer
+from matching.models import Event, Item, Category, Matching, Care, EventImage
+from account.serializers import DonorProfileSerializer, MyUserSerializer
+import json
 
 
+# Basic
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name']
 
+class EventImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventImage
+        fields = ['id', 'image', 'created_at']
+    
+# Custom
 class ItemSerializer(serializers.ModelSerializer):
 
     donor_username = serializers.SerializerMethodField()
 
     class Meta:
         model = Item
-        fields = ['id', 'name', 'weight', 'count', 'categories',
-                  'description', 'created_at', 'updated_at', 'donor_profile', 'donor_username']
-
+        fields = ['id', 'name', 'weight', 'count', 'categories', 'description',
+                  'created_at', 'updated_at', 'donor_profile', 'donor_username']
+    
     def validate(self, attrs):
         print(attrs)
         return super().validate(attrs)
@@ -31,37 +39,35 @@ class ItemSerializer(serializers.ModelSerializer):
         serializers = CategorySerializer(categories, many=True)
         data['categories'] = serializers.data
         return data
-
-class ItemDetailSerializer(serializers.ModelSerializer):
-
-    donor_profile = DonorProfileSerializer()
-    categories = CategorySerializer(many=True)
-
-    class Meta:
-        model = Item
-        fields = ['id', 'name', 'weight', 'count', 'categories', 
-                  'description', 'created_at', 'updated_at', 'donor_profile']
+    
 
 class EventSerializer(serializers.ModelSerializer):
 
-    recipient_name = serializers.SerializerMethodField()
-    recipient_avatar = serializers.SerializerMethodField()
+    images = EventImageSerializer(many=True)
 
     class Meta:
         model = Event
-        fields = ['id', 'name', 'closed', 'start_time', 'end_time', 'recipient_name', 'recipient_avatar',
-                  'categories', 'address', 'created_at', 'updated_at', 'recipient_profile', 'banner', 'description']
+        fields = ['id', 'name', 'closed', 'start_time', 'end_time', 'images',
+                  'categories', 'address', 'created_at', 'updated_at', 'recipient_profile', 'description']
     
-    def get_recipient_name(self, obj):
-        return obj.get_organization_name()
+    def get_fields(self):
+        fields = super().get_fields()
+        user = self.context['request'].user
 
-    def get_recipient_avatar(self, obj):
-        return self.context['request']\
-            .build_absolute_uri(obj.get_recipient_avatar())
-    
-    def get_banner(self, obj):
-        return self.context['request']\
-            .build_absolute_uri(obj.banner)
+        if (user.is_authenticated and not user.is_staff
+            and user.is_recipient):
+            # Exclude known field
+            self.fields.pop('recipient_profile')
+            # ...
+        return fields
+
+    def create(self, validated_data):
+        print(validated_data)
+        images = validated_data.pop('images', None)
+        event = super().create(**validated_data)
+        for image in images:
+            EventImage.objects.create(event=event, **image)
+        return event
     
     def to_representation(self, instance):
         data =  super().to_representation(instance)
@@ -71,6 +77,7 @@ class EventSerializer(serializers.ModelSerializer):
         data['categories'] = serializers.data
 
         return data
+    
 
 class MatchingSerializer(serializers.ModelSerializer):
     class Meta:

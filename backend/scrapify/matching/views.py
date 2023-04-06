@@ -1,3 +1,4 @@
+import random
 from django.shortcuts import render
 from rest_framework.generics import (
     ListAPIView,
@@ -16,7 +17,6 @@ from matching.models import (
 )
 from matching.serializers import (
     ItemSerializer,
-    ItemDetailSerializer,
     EventSerializer,
     MatchingSerializer,
     MatchingDetailSerializer,
@@ -53,20 +53,29 @@ class ItemViewSet(ViewSet,
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+
+        import time
+        time.sleep(1)
+
         items = Item.objects.all()
         matched = self.request.query_params.get('matched', None)
         cared_by = self.request.query_params.get('cared_by', None)
+        shuffle = self.request.query_params.get('shuffle', None)
 
         if cared_by is not None:
             items = items.filter(cares__recipient=cared_by)
 
         if matched is not None:
             items = items.filter(matching__isnull=matched=='false')
+
+        if shuffle is not None and shuffle == 'true':
+            to_shuffle_items = list(items)
+            random.shuffle(to_shuffle_items)
+            items = Item.objects.filter(pk__in=[item.pk for item in to_shuffle_items])
+
         return items
 
     def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return ItemDetailSerializer
         return ItemSerializer
 
 class EventViewSet(ViewSet,
@@ -75,11 +84,11 @@ class EventViewSet(ViewSet,
                    RetrieveAPIView,
                    UpdateAPIView,
                    DestroyAPIView):
-    
-    permission_classes = [IsAuthenticated]
+
+    # permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['name', 'closed', 'recipient_profile']
-    search_fields = ['name', 'start_date',]
+    search_fields = ['name', 'start_date']
 
     def get_queryset(self):
         events = Event.objects.all()
@@ -106,7 +115,6 @@ class MatchingViewset(ViewSet,
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['status','event__id', 'event__recipient_profile' ,'item__donor_profile']
-
 
     def get_queryset(self):
         return Matching.objects.all()

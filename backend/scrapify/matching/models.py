@@ -21,20 +21,33 @@ class Item(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-def get_event_directory(instance, filename):
-    return f'{instance.name}'
+    def get_user_profile(self):
+        return self.donor_profile
+    
+    def get_user(self):
+        return self.donor_profile.user
+
+class ItemImage(models.Model):
+    image = models.ImageField(upload_to="items/%y/%m/%d", null=False, blank=False)
+    item = models.ForeignKey(Item, 
+                             on_delete=models.CASCADE, 
+                             related_name='images')
+
+def get_self_directory (instance, filename):
+    user=instance.get_user()
+    username=user.get_username()
+    return f'{username}/{instance.name}'
 
 class ActiveEventManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(closed=False)
-
+    
 class Event(models.Model):
+
     name = models.CharField(max_length=100)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    closed = models.BooleanField(default=False)
-    banner = models.ImageField(upload_to=get_event_directory, default='banner/default_banner.jpg')
-
+    closed = models.BooleanField(default=False, blank=True)
     address = models.CharField(max_length=200)
     description = models.TextField()
     recipient_profile = models.ForeignKey(RecipientProfile,
@@ -48,15 +61,33 @@ class Event(models.Model):
     is_active = ActiveEventManager()
     objects = models.Manager()
 
+    class Meta:
+        ordering = ['-created_at', '-updated_at']
+
+    def get_user_profile(self):
+        return self.recipient_profile
+    
+    def get_user(self):
+        self.recipient_profile.user
+    
     def get_organization_name(self):
         return self.recipient_profile.organization_name
     
     def get_recipient_avatar(self):
-        return self.recipient_profile.avatar.url
+        if self.recipient_profile.avatar:
+            return self.recipient_profile.avatar.url
+        return ""
 
     def __str__(self):
         return self.name
 
+class EventImage(models.Model):
+    image = models.ImageField(upload_to="banners/%y/%m/%d",
+                              default='banner/default_banner.jpg')
+    event = models.ForeignKey(Event,
+                              on_delete=models.CASCADE,
+                              related_name='images')
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class Matching(models.Model):
 
@@ -90,4 +121,3 @@ class Care(models.Model):
                               related_name='cares')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
